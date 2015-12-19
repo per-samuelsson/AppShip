@@ -15,6 +15,7 @@
     <FileAlignment>512</FileAlignment>
     <UseVSHostingProcess>false</UseVSHostingProcess>
     <StartWorkingDirectory>$(MSBuildProjectDirectory)</StartWorkingDirectory>
+	<StartArguments>--resourceDir=.</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x64' ">
     <DebugSymbols>true</DebugSymbols>
