@@ -1,5 +1,6 @@
 using Starcounter;
 using System;
+using System.IO;
 using System.Linq;
 
 namespace AppShip {
@@ -19,11 +20,14 @@ namespace AppShip {
                 ApplicationFiles.Clear();
                 return;
             }
+            
+            ApplicationFiles.Clear();
 
             OutDirectory = string.Format("AppShip-{0}-{1}", Db.Environment.DatabaseNameLower, app.Name);
-
-            ApplicationFiles.Clear();
-            ApplicationFiles.Add().Path = app.FilePath;
+            var dir = Path.GetDirectoryName(app.FilePath);
+            foreach (var item in Directory.GetFiles(dir)) {
+                ApplicationFiles.Add().Path = item;
+            }
         }
     }
 }

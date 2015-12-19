@@ -18,10 +18,15 @@
             <label class="control-label">Result: </label>
         </div>
 
+        <span>REM Output directory: </span><span>{{model.OutDirectory}}</span>
+        <br />
+        <span>SET OutDir = </span><span>{{model.OutDirectory}}</span>
+        <br />
         <span>REM Application files</span>
         <div>
             <template is="dom-repeat" items="{{model.ApplicationFiles}}">
-                <p>xcopy <span>{{item.Path}}</span> <span>{{model.OutDirectory}}</span></p>
+                <span>xcopy <span>{{item.Path}}</span> <span>OutDir</span></span>
+                <br />
             </template>
         </div>
         
