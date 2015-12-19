@@ -1,7 +1,7 @@
 {
   "Html": "",
 
-  "Application": "Application name or full\\path\\to\\application.exe",
+  "Application$": "Application name or full\\path\\to\\application.exe",
   "OutDirectory": "AppShip-[Database]-[AppName]",
   "ShipIt$": 0,
 
