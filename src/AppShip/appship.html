@@ -1,11 +1,30 @@
-﻿<!DOCTYPE html>
+﻿
+<template>
+    <template is="dom-bind">
+        <h5>Ship that app!</h5>
+        <div class="form-horizontal box-label">
+            <label class="control-label">Specify application: </label>
+        </div>
+        <div class="box-control">
+            <input type="text" value="{{model.Application::input}}" class="form-control" />
+        </div>
+        <p></p>
+        <div>
+            <button value="{{model.ShipIt$::click}}" onclick="++this.value">Ship it</button>
+        </div>
+        <p></p>
 
-<html lang="en" xmlns="http://www.w3.org/1999/xhtml">
-<head>
-    <meta charset="utf-8" />
-    <title>Ship that app!</title>
-</head>
-<body>
+        <div class="form-horizontal box-label">
+            <label class="control-label">Result: </label>
+        </div>
 
-</body>
-</html>
+        <span>REM Application files</span>
+        <div>
+            <template is="dom-repeat" items="{{model.ApplicationFiles}}">
+                <p>xcopy <span>{{item.Path}}</span> <span>{{model.OutDirectory}}</span></p>
+            </template>
+        </div>
+        
+        <dom-bind-notifier observed-object="{{model}}" path="model" deep></dom-bind-notifier>
+    </template>
+</template>
