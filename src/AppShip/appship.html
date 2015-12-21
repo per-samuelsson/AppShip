@@ -1,10 +1,14 @@
 ﻿
 <template>
     <template is="dom-bind">
-        <h5>Ship that app!</h5>
-        <div class="form-horizontal box-label">
-            <label class="control-label">Specify application: </label>
-        </div>
+        <h4>Ship that app!</h4>
+        <span>
+            Specify the application to ship. You can specify <b>either simple name</b> of the application <b>or the full path to the .exe</b>.
+            If you specify only the name, the application must be running.<br />
+            You can test specifying "appship" to ship the AppShip application itself.
+        </span>
+        <br />
+        <br />
         <div class="box-control">
             <input type="text" value="{{model.Application$::change}}" class="form-control" />
         </div>
@@ -13,23 +17,67 @@
             <button value="{{model.ShipIt$::click}}" onclick="++this.value">Ship it</button>
         </div>
         <p></p>
-
-        <div class="form-horizontal box-label">
-            <label class="control-label">Result: </label>
-        </div>
-
-        <span>REM Output directory: </span><span>{{model.OutDirectory}}</span>
         <br />
-        <span>SET OutDir = </span><span>{{model.OutDirectory}}</span>
+
+        <h5>Script:</h5>
+        <span>@echo off</span><br />
         <br />
-        <span>REM Application files</span>
+        <span>:: Variables</span><br />
+        <span>SETLOCAL ENABLEEXTENSIONS</span><br />
+        <span>SET OutDir=</span><span>{{model.Result.OutDirectory}}</span><br />
+        <br />
+
+        <span>:: Init</span><br />
+        <span>:: staradmin -d=</span><span>{{model.Result.Database}}</span><span> stop db</span><br />
+        <span>:: rmdir %OutDir% /s/q</span><br />
+        <span>mkdir %OutDir%</span><br />
+        <span>IF %ERRORLEVEL% NEQ 0 (GOTO :EOF)</span><br />
+        <br />
+        <span>:: Appship file</span><br />
+        <span>echo Version=</span><span>{{model.Result.InstalledVersion}}</span><span> >> %OutDir%\appship.txt</span>
+        <br />
+        <br />
+        <span>:: Application files</span><br />
+        <span>mkdir %OutDir%\appfiles</span>
         <div>
-            <template is="dom-repeat" items="{{model.ApplicationFiles}}">
-                <span>xcopy <span>{{item.Path}}</span> <span>OutDir</span></span>
+            <template is="dom-repeat" items="{{model.Result.ApplicationFiles}}">
+                <span>xcopy <span>{{item.Path}}</span> <span>%OutDir%\appfiles</span></span><br />
+                <span>IF %ERRORLEVEL% NEQ 0 (GOTO :EOF)</span><br />
+            </template>
+        </div>
+        <br />
+        <span>:: Data files</span>
+        <br />
+        <span>mkdir %OutDir%\imagefiles</span>
+        <div>
+            <template is="dom-repeat" items="{{model.Result.ImageFiles}}">
+                <span>xcopy <span>{{item.Path}}</span> <span>%OutDir%\imagefiles</span></span>
+                <br />
+                <span>IF %ERRORLEVEL% NEQ 0 (GOTO :EOF)</span>
                 <br />
             </template>
         </div>
-        
+
+        <br />
+        <span>:: Transaction log files</span>
+        <br />
+        <template is="dom-if" if="{{model.Result.TransactionLogFiles.length}}">
+            <span>mkdir %OutDir%\translogfiles</span>
+            <div>
+                <template is="dom-repeat" items="{{model.Result.TransactionLogFiles}}">
+                    <span>xcopy <span>{{item.Path}}</span> <span>%OutDir%\translogfiles</span></span>
+                    <br />
+                    <span>IF %ERRORLEVEL% NEQ 0 (GOTO :EOF)</span>
+                    <br />
+                </template>
+            </div>
+        </template>
+        <template is="dom-if" if="{{!model.Result.TransactionLogFiles.length}}">
+            <span>:: (Transaction log files are part of data files)</span>
+        </template>
+        <br />
+        <br />
+        <span>ECHO Successfully wrapped up in %OutDir%!</span>
         <dom-bind-notifier observed-object="{{model}}" path="model" deep></dom-bind-notifier>
     </template>
 </template>

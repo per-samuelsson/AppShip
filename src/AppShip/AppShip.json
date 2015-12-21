@@ -1,11 +1,25 @@
 {
   "Html": "",
 
-  "Application$": "Application name or full\\path\\to\\application.exe",
-  "OutDirectory": "AppShip-[Database]-[AppName]",
+  "Application$": "[Application name or full\\path\\to\\application.exe]",
   "ShipIt$": 0,
 
-  "ApplicationFiles": [
-    { "Path": "" }
-  ]
+  "ResultMessage":  "",
+  "Result": {
+    "OutDirectory": "AppShip-[Database]-[AppName]",
+    "InstalledVersion": "",
+    "Database": "",
+
+    "ApplicationFiles": [
+      { "Path": "" }
+    ],
+
+    "ImageFiles": [
+      { "Path": "" }
+    ],
+
+    "TransactionLogFiles": [
+      { "Path": "" }
+    ]
+  }
 }
