@@ -66,6 +66,7 @@
       <DependentUpon>AppShip.json</DependentUpon>
     </Compile>
     <Compile Include="DatabaseProperties.cs" />
+    <Compile Include="Mock\AppShipPartial.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

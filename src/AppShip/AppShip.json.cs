@@ -7,7 +7,7 @@ using System.Collections.Generic;
 
 namespace AppShip {
 
-    partial class AppShip : Partial {
+    partial class AppShip : AppShipPartial {
 
         public AppShip InitDefault() {
             var us = Starcounter.Application.Current;
