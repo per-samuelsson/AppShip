@@ -16,11 +16,13 @@ namespace AppShip {
             if (apps.Length == 1) {
                 // Only we are running. Suggest us as the example.
                 Application = us.Name;
+                BuildResult(us.FilePath, us.Name);
             }
             else if (apps.Length == 2) {
                 // Its us and another one. Lets suggest that other one.
                 var other = apps.First(a => !a.Name.Equals(us.Name));
                 Application = other.Name;
+                BuildResult(other.FilePath, other.Name);
             }
             else {
                 var suggest = "[";
@@ -37,6 +39,7 @@ namespace AppShip {
 
         void Handle(Input.ShipIt shipit) {
             var appSpec = Application;
+            string path, name = null;
 
             Result = new ResultJson();
             
@@ -44,27 +47,34 @@ namespace AppShip {
                 ResultMessage = "No application given";
                 return;
             }
-
+            
             var app = Db.Applications.FirstOrDefault(a => a.Name.Equals(appSpec, StringComparison.InvariantCultureIgnoreCase));
-            if (app == null) {
-                // Look for exe
-                // TODO:
+            if (app != null) {
+                path = app.FilePath;
+                name = app.Name;
+            }
+            else if (File.Exists(appSpec)) {
+                path = appSpec;
+                name = Path.GetFileName(path);
+            }
+            else {
                 ResultMessage = "Couldn't find application: " + appSpec;
                 return;
             }
 
-            // Decide name and full path to exe and pass it to result script generator
-            // TODO:
+            BuildResult(path, name);
+        }
 
-            ResultMessage = appSpec;
-            
+        void BuildResult(string path, string name) {
+            ResultMessage = string.Format("{0} ({1})", name, path);
+
             var props = DatabaseProperties.CreateFromServerRequest();
 
-            Result.OutDirectory = string.Format("AppShip-{0}-{1}", Db.Environment.DatabaseNameLower, app.Name);
+            Result.OutDirectory = string.Format("AppShip-{0}-{1}", Db.Environment.DatabaseNameLower, name);
             Result.InstalledVersion = CurrentVersion.Version;
             Result.Database = Db.Environment.DatabaseNameLower;
 
-            var dir = Path.GetDirectoryName(app.FilePath);
+            var dir = Path.GetDirectoryName(path);
             foreach (var item in Directory.GetFiles(dir)) {
                 Result.ApplicationFiles.Add().Path = item;
             }
@@ -81,8 +91,6 @@ namespace AppShip {
                     Result.TransactionLogFiles.Add().Path = item;
                 }
             }
-
-            
         }
     }
 }
