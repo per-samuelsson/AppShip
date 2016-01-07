@@ -2,6 +2,8 @@
   "Html": "",
 
   "Application$": "[Application name or full\\path\\to\\application.exe]",
+  "ScriptIt$": 0,
+  "ZipIt$": 0,
   "ShipIt$": 0,
 
   "ResultMessage":  "",
